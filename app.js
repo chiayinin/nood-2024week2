@@ -31,11 +31,41 @@ const requestListener = async (req, res) => {
       post
     }));
     res.end();
-  } else if(req.method == 'OPTIONS') {
+  } else if(req.url == '/posts' && req.method == 'POST') { // 新增單筆資料
+    req.on('end', async() => {
+      try {
+        // {
+        //   "name": "aaa",
+        //   "tags": "aaa",
+        //   "context": "aaa",
+        //   "type": "group"
+        // }
+        const data = JSON.parse(body);
+        const newPost = await Post.create(data);
+
+        res.writeHead(200, headers);
+        res.write(JSON.stringify({
+          "status": "success",
+          "data": newPost
+        }));
+        res.end();
+      } catch (error) {
+        res.write(JSON.stringify({
+          "status": "false",
+          "message": error
+        }));
+        res.end();
+      }
+    })
+  } else if(req.method == 'OPTIONS') { // OPTIONS
     res.writeHead(200, headers);
     res.end();
-  } else {
-    console.log('else');
+  } else { // 404
+    res.writeHead(404, headers);
+    res.write(JSON.stringify({
+      "status": "false",
+      "message": "無此網站路徑"
+    }))
     res.end();
   }
 };
