@@ -31,11 +31,12 @@ const requestListener = async (req, res) => {
       post
     }));
     res.end();
-  } else if(req.method == 'OPTION') {
+  } else if(req.method == 'OPTIONS') {
     res.writeHead(200, headers);
     res.end();
   } else {
     console.log('else');
+    res.end();
   }
 };
 
