@@ -31,6 +31,9 @@ const requestListener = async (req, res) => {
       post
     }));
     res.end();
+  } else if(req.method == 'OPTION') {
+    res.writeHead(200, headers);
+    res.end();
   } else {
     console.log('else');
   }
