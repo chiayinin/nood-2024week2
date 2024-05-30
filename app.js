@@ -46,7 +46,7 @@ const requestListener = async (req, res) => {
         res.end();
       }
     })
-  } else if(req.url.startsWith('/posts/') && req.method == 'PATCH') {
+  } else if(req.url.startsWith('/posts/') && req.method == 'PATCH') { // 修改單筆資料
     req.on('end', async() => {
       try {
         let data = JSON.parse(body);
@@ -58,6 +58,10 @@ const requestListener = async (req, res) => {
         handleError(res, error);
       }
     });
+  } else if(req.url == '/posts' && req.method == 'DELETE') { // 刪除全部資料
+    const posts = await Post.deleteMany({});
+
+    handleSuccess(res, posts);
   } else if(req.method == 'OPTIONS') { // OPTIONS
     res.writeHead(200, headers);
     res.end();
