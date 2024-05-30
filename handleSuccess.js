@@ -4,13 +4,14 @@ const headers = {
   'Access-Control-Allow-Methods': 'PATCH, POST, GET,OPTIONS,DELETE',
   'Content-Type': 'application/json'
 };
-const handleError = (res, err) => {
-  res.writeHead(400,headers);
+
+const handleSuccess = (res, data) => {
+  res.writeHead(200, headers);
   res.write(JSON.stringify({
-    status: false,
-    message: err.message ? err.message : "資料有誤或無此 ID"
+    status: "success",
+    data: data
   }));
   res.end();
 };
 
-export default handleError;
+export default handleSuccess;

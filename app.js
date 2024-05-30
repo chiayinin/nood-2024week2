@@ -1,6 +1,8 @@
 import * as http from 'http';
 import mongoose from 'mongoose';
 import Post from './modules/posts.js';
+import handleSuccess from './handleSuccess.js';
+import handleError from './handleError.js';
 
 const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
@@ -22,14 +24,8 @@ const requestListener = async (req, res) => {
 
   // 取得所有資料
   if(req.url == '/posts' && req.method == 'GET') {
-    console.log('GET ALL');
     const post = await Post.find(); // 透過 mongoose find() 方法取得所有資料
-
-    res.writeHead(200, headers);
-    res.write(JSON.stringify({
-      "status" : "success",
-      post
-    }));
+    handleSuccess(res, post);
     res.end();
   } else if(req.url == '/posts' && req.method == 'POST') { // 新增單筆資料
     req.on('end', async() => {
@@ -43,20 +39,25 @@ const requestListener = async (req, res) => {
         const data = JSON.parse(body);
         const newPost = await Post.create(data);
 
-        res.writeHead(200, headers);
-        res.write(JSON.stringify({
-          "status": "success",
-          "data": newPost
-        }));
+        handleSuccess(res, newPost);
         res.end();
       } catch (error) {
-        res.write(JSON.stringify({
-          "status": "false",
-          "message": error
-        }));
+        handleError(res, error);
         res.end();
       }
     })
+  } else if(req.url.startsWith('/posts/') && req.method == 'PATCH') {
+    req.on('end', async() => {
+      try {
+        let data = JSON.parse(body);
+        let id = req.url.split('/').pop();
+        const updataPost = await Post.findByIdAndUpdate(id, data);
+
+        handleSuccess(res, updataPost);
+      } catch(error) {
+        handleError(res, error);
+      }
+    });
   } else if(req.method == 'OPTIONS') { // OPTIONS
     res.writeHead(200, headers);
     res.end();
