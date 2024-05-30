@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import Post from './modules/posts.js';
 import handleSuccess from './handleSuccess.js';
 import handleError from './handleError.js';
-import 'dotenv/config'
+import dotenv from 'dotenv';
 
 const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
