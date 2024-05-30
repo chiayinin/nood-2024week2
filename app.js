@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Post from './modules/posts.js';
 import handleSuccess from './handleSuccess.js';
 import handleError from './handleError.js';
+import 'dotenv/config'
 
 const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
@@ -11,8 +12,13 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
+// 從 config.env 檔案載入環境變數
+dotenv.config({ path: './config.env' });
+// 將 <password> 片段的內容替換為你的 DATABASE_PASSWORD 環境變數內容
+const DB = process.env.DATABASE.replace('<password>',process.env.DATABASE_PASSWORD);
+
 mongoose
-  .connect('mongodb://localhost:27017/posts')
+  .connect(DB)
   .then(() => console.log("mongoose 資料庫連結成功"));
 
 const requestListener = async (req, res) => {
