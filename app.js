@@ -62,6 +62,11 @@ const requestListener = async (req, res) => {
     const posts = await Post.deleteMany({});
 
     handleSuccess(res, posts);
+  } else if(req.url.startsWith('/posts/') && req.method == 'DELETE') { // 刪除單筆資料
+    const id = req.url.split('/').pop();
+    const posts = await Post.findByIdAndDelete(id);
+
+    handleSuccess(res, posts);
   } else if(req.method == 'OPTIONS') { // OPTIONS
     res.writeHead(200, headers);
     res.end();
